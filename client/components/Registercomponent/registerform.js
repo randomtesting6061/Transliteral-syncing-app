@@ -14,10 +14,34 @@ const handleChamge=(e)=>{
 }
 ;
 
-const handleSubmit=(e)=>{
-    e.preventDefault();
-    console.log(formdata,"reg")
-};
+const handleSubmit=async (e)=>
+    {
+        e.preventDefault();
+        console.log(formdata,"submitting data")
+        try{
+const response= await fetch ("http://127.0.0.1:8000/register",{
+    method:"POST",
+    headers:{
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formdata)
+}) ;
+const data = await response.json();  // ✅ Convert response to JSON
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Registration failed");  // ✅ Handle API errors
+        }
+
+        console.log("Registration Successful:", data);
+        alert("Registration Successful!"); 
+        setformdata({})
+        }
+        catch (error) {
+            console.error("Error:", error);
+            alert(error.message || "Something went wrong");
+        }
+        
+    }
 
 useEffect(()=>{
     console.log(formdata)

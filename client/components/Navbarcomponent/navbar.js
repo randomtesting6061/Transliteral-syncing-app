@@ -1,37 +1,41 @@
-"use client"
-import React from 'react';
-
+"use client";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { logout } from "@/store/authSlice";
 import Link from "next/link";
 
-const Navbar=()=>
-{
-    return(
-        <div className="top-0 bg-gray-200 w-full p-4">
-      <nav className="flex justify-between items-center flex-row w-full">
-        <div className='text-xl font-semibold'>Transliterall Syncing app</div>
-        <div>
-        <ul className='hidden md:flex space-x-6'>
-            <li>
-                <Link href="/">Home</Link>
-                
-            </li>
-            
-        </ul>
-        </div>
-        <div>
-          <ul className='flex space-x-6 mr-6'>
-          <li>
-                <Link href="/Login">Login</Link>
-            </li>
-            <li>
-                <Link href="/Register">Register</Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-        </div>
+const Navbar = () => {
+    const { isAuthenticated } = useSelector((state) => state.auth);
+    const dispatch = useDispatch();
+    const router = useRouter();
 
-    )
-}
+    const handleLogout = () => {
+        dispatch(logout());
+        router.push("/");  // ✅ Redirect to home after logout
+    };
+
+    return (
+        <nav className="bg-gray-200 p-4">
+            <div className="flex justify-between items-center">
+                <div className="text-xl font-semibold">Transliteral Syncing App</div>
+                <ul className="flex space-x-6">
+                    <li><Link href="/">Home</Link></li>
+                    <li><Link href="/dashboard">Dashboard</Link></li>
+                </ul>
+                <div>
+                    {isAuthenticated ? (
+                        <button onClick={handleLogout}>Logout</button>
+                    ) : (
+                        <>
+                            <Link href="/Login">Login</Link>
+                            <Link href="/Register">Register</Link>
+                        </>
+                    )}
+                </div>
+            </div>
+        </nav>
+    );
+};
 
 export default Navbar;
